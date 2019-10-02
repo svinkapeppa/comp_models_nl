@@ -1,0 +1,22 @@
+# Morphology 3
+
+This assignment is about morphological synthesis.
+
+## Task 1
+
+Write a converter that puts the words `cat` and `bus` in the singular and plural.
+
+```
+cat[Sg] -> cat
+bus[Sg] -> bus
+cat[Pl] -> cats
+bus[Pl] -> buses
+```
+
+## Task 2
+
+Write a converter for the synthesis of the plural nouns as in the presentation.
+
+## Task 3
+
+Write a converter for synthesis in Arabic morphology.
