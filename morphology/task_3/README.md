@@ -15,7 +15,7 @@ bus[Pl] -> buses
 
 ## Task 2
 
-Write a converter for the synthesis of the plural nouns as in the presentation.
+Write a converter for the synthesis in English morphology.
 
 ## Task 3
 
