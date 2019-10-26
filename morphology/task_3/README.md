@@ -19,4 +19,4 @@ Write a converter for the synthesis of the plural nouns as in the presentation.
 
 ## Task 3
 
-Write a converter for synthesis in Arabic morphology.
+Write a converter for the synthesis in Arabic morphology.
