@@ -1,0 +1,45 @@
+! Declare multicharacter strings
+Multichar_Symbols +I +II +Act +Pass +Perf +Imperf +3 +M +F
+
+! Decalre `Root`
+LEXICON Root
+
+Verb ;
+
+! Declare `Verb` lexicon
+LEXICON Verb
+
+ktb Vinf ;
+zhr Vinf ;
+sfr Vinf ;
+mrd Vinf ;
+hsn Vinf ;
+
+! Declare `Vinf` lexicon
+LEXICON Vinf
+
++I:^1  Vtype ;
++II:^2 Vtype ;
+
+! Declare `Vtype` lexicon
+LEXICON Vtype
+
++Act:^3  Vaspect ;
++Pass:^4 Vaspect ;
+
+! Declare `Vaspect` lexicon
+LEXICON Vaspect
+
++Perf:^5   Vperson ;
++Imperf:^6 Vperson ;
+
+! Declare `Vperson` lexicon
+LEXICON Vperson
+
++3:0 Vgender ;
+
+! Declare `Vgender` lexicon
+LEXICON Vgender
+
++M:^7 #;
++F:^8 #;

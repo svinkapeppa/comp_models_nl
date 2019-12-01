@@ -1,0 +1,15 @@
+# Append '+s' to plural forms
+def Lexicon [[c a t]|[b u s]] [["[Pl]":[0 "+" 0 s]]|["[Sg]":0]] ;
+
+# Replace '+' with 'e', if it is between two 's'
+def EInsert "+" -> e || s _ s ;
+
+# Remove excess '+'
+def Cleanup "+" -> 0 ;
+
+# Final converter
+def Transform Lexicon .o. EInsert .o. Cleanup ;
+
+# Prepare to use
+regex Transform ;
+

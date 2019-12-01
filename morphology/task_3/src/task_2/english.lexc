@@ -1,0 +1,34 @@
+! Declare multicharacter strings
+Multichar_Symbols +N +Sg +Pl
+
+! Decalre `Root`
+LEXICON Root
+
+Noun ;
+
+! Declare `Noun` lexicon
+LEXICON Noun
+
+ally    Ninf ;
+brush   Ninf ;
+bus     Ninf ;
+cat     Ninf ;
+city    Ninf ;
+formula Ninf ;
+fox     Ninf ;
+goose   Ninf ;
+panic   Ninf ;
+play    Ninf ;
+topaz   Ninf ;
+torch   Ninf ;
+try     Ninf ;
+watch   Ninf ;
+
+! Declare parallel forms
+formula+N+Pl:formulae # ;
+
+! Declare `Ninf` lexicon
+LEXICON Ninf
+
++N+Sg:0   # ;
++N+Pl:^s  # ;

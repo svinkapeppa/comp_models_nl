@@ -1,0 +1,24 @@
+# Read and define lexicon
+read lexc english.lexc
+define Lexicon ;
+
+# Define exceptions
+define Exceptions [[{goose} "+N" "+Pl" .x. {geese}] | [{play} "+N" "+Pl" .x. {plays}]] ;
+
+# E insertion: e added after -s, -z, -x, -ch, -sh before s
+define EInsertion [..] -> e || s | z | x | c h | s h _ "^" s ;
+
+# Y replacement: -y changes to -ie before -s
+define YReplacement y -> i e || _ "^" s ;
+
+# Cleanup: remove morpheme boundaries
+define Cleanup "^" -> 0 ;
+
+# Create final converter
+define Grammar Lexicon           .o.
+               EInsertion        .o.
+               YReplacement      .o.
+               Cleanup ;
+
+# Add exceptions to the converter
+regex Exceptions .P. Grammar ;
