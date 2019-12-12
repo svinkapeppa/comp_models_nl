@@ -12,6 +12,6 @@ Tasks:
 
 Descriptions of tasks can be found inside `.ipynb` notebooks or in nested `README.md` files.
 
-## Syntax
+## [Syntax](syntax)
 
 Second part of the course is about syntax.
