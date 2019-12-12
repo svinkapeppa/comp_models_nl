@@ -84,7 +84,7 @@ You can specify a lot of parameters. Full list can be found in authors' Github.
 ## Evaluation
 
 In order to evaluate the perfomance of the model you need to have some model. You can specify the path to your model with
-`--model-path-base` argument. Trained with default parameters model can be found [here]().
+`--model-path-base` argument. Trained with default parameters model can be downloaded from [here](https://github.com/svinkapeppa/comp_models_nl/releases/download/v0.0.1/model.pt).
 
 Evaluation can be started with the following comand:
 
