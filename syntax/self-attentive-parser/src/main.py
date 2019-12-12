@@ -566,8 +566,8 @@ def main():
     subparser.add_argument("--numpy-seed", type=int)
     subparser.add_argument("--model-path-base", required=True)
     subparser.add_argument("--evalb-dir", default="EVALB/")
-    subparser.add_argument("--train-path", default="data/02-21.10way.clean")
-    subparser.add_argument("--dev-path", default="data/22.auto.clean")
+    subparser.add_argument("--train-path", default="data/train_con.txt")
+    subparser.add_argument("--dev-path", default="data/dev_con.txt")
     subparser.add_argument("--batch-size", type=int, default=250)
     subparser.add_argument("--subbatch-max-tokens", type=int, default=2000)
     subparser.add_argument("--eval-batch-size", type=int, default=100)
@@ -579,7 +579,7 @@ def main():
     subparser.set_defaults(callback=run_test)
     subparser.add_argument("--model-path-base", required=True)
     subparser.add_argument("--evalb-dir", default="EVALB/")
-    subparser.add_argument("--test-path", default="data/23.auto.clean")
+    subparser.add_argument("--test-path", default="data/test_con.txt")
     subparser.add_argument("--test-path-raw", type=str)
     subparser.add_argument("--eval-batch-size", type=int, default=100)
 
@@ -587,7 +587,7 @@ def main():
     subparser.set_defaults(callback=run_ensemble)
     subparser.add_argument("--model-path-base", nargs='+', required=True)
     subparser.add_argument("--evalb-dir", default="EVALB/")
-    subparser.add_argument("--test-path", default="data/22.auto.clean")
+    subparser.add_argument("--test-path", default="data/test_con.txt")
     subparser.add_argument("--eval-batch-size", type=int, default=100)
 
     subparser = subparsers.add_parser("parse")
@@ -601,7 +601,7 @@ def main():
     subparser.set_defaults(callback=run_viz)
     subparser.add_argument("--model-path-base", required=True)
     subparser.add_argument("--evalb-dir", default="EVALB/")
-    subparser.add_argument("--viz-path", default="data/22.auto.clean")
+    subparser.add_argument("--viz-path", default="data/test_con.txt")
     subparser.add_argument("--eval-batch-size", type=int, default=100)
 
     args = parser.parse_args()
