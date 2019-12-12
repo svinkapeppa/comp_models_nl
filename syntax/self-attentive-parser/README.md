@@ -15,7 +15,7 @@ Python dependencies can be found in [requirements.txt](requirements.txt). It is 
 
 ## Training
 
-Training can be started with the following comand:
+Training can be started with the following command:
 
 ```
 python src/main.py train --use-words --use-chars-lstm --model-path-base models/model --d-char-emb 64
@@ -87,7 +87,7 @@ You can specify a lot of parameters. Full list can be found in authors' Github.
 In order to evaluate the perfomance of the model you need to have some model. You can specify the path to your model with
 `--model-path-base` argument. Trained with default parameters model can be downloaded from [here](https://github.com/svinkapeppa/comp_models_nl/releases/download/v0.0.1/model.pt).
 
-Evaluation can be started with the following comand:
+Evaluation can be started with the following command:
 
 ```
 python src/main.py test --model-path-base models/model.pt

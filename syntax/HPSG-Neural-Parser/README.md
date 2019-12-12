@@ -1,149 +1,132 @@
 # HPSG Neural Parser
 
-This is a Python implementation of the parsers described in "Head-Driven Phrase Structure Grammar Parsing on Penn Treebank" from ACL 2019.
-
-## Contents
-1. [Requirements](#Requirements)
-2. [Training](#Training)
-3. [Citation](#Citation)
-4. [Credits](#Credits)
+Working variant of HPSG Neural Parser, developed by Junru Zhou and Hai Zhao. You can check out their work here:
+* [Github](https://github.com/DoodleJZ/HPSG-Neural-Parser)
+* [Article](https://arxiv.org/abs/1907.02684)
 
 ## Requirements
 
-* Python 3.6 or higher.
-* Cython 0.25.2 or any compatible version.
-* [PyTorch](http://pytorch.org/) 0.4.0. This code has not been tested with PyTorch 1.0, but it should work.
-* [EVALB](http://nlp.cs.nyu.edu/evalb/). Before starting, run `make` inside the `EVALB/` directory to compile an `evalb` executable. This will be called from Python for evaluation. 
-* [AllenNLP](http://allennlp.org/) 0.7.0 or any compatible version (only required when using ELMo word representations)
-* [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) PyTorch 1.0.0+ or any compatible version (only required when using BERT and XLNet, XLNet only for joint span version.)
+1. Linux
+  - Because of Cython it is nearly impossible to run this code on MacOS
+2. Python 3.6 ot higher
+3. Before starting, run make inside the EVALB/ directory to compile an evalb executable. This will be called from Python for evaluation.
 
-#### Pre-trained Models (PyTorch)
-
-The following pre-trained parser models are available for download:
-* [`joint_cwt_best_dev=93.85_devuas=95.87_devlas=94.47.pt`](https://drive.google.com/open?id=1ZEMaEQDLRR0-XOCAs_qXtgZo4AOLxaMk): 
-Our best English single-system parser based on Glove.
-* [`joint_bert_dev=95.55_devuas=96.67_devlas=94.86.pt`](https://drive.google.com/open?id=1TNsJeWVp74iuGINStSfa9z25XwzwHBXX):
-Our best English single-system parser based on BERT.
-* [`joint_xlnet_dev=96.03_devuas=96.96_devlas=95.32.pt`](https://drive.google.com/open?id=1wF0FoAhG3MarzLrQTz8zTSygMzbZSuNA):
-Our best English single-system parser based on XLNet.
-
-The pre-trained model with Glove embeddings obtains 93.78 F-scores of constituent parsing and 96.09 UAS, 94.68 LAS of dependency parsing on the test set. 
-
-The pre-trained model with BERT obtains 95.84 F-scores of constituent parsing and 97.00 UAS, 95.43 LAS of dependency parsing on the test set. 
-
-The pre-trained model with XLNet obtains 96.33 F-scores of constituent parsing and 97.20 UAS, 95.72 LAS of dependency parsing on the test set. 
-
-To use ELMo embeddings, download the following files into the `data/` folder (preserving their names):
-
-* [`elmo_2x4096_512_2048cnn_2xhighway_options.json`](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json)
-* [`elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5`](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5)
-
-There is currently no command-line option for configuring the locations/names of the ELMo files.
-
-Pre-trained BERT and XLNet weights will be automatically downloaded as needed by the `pytorch-transformers` package.
+Python dependencies can be found in [requirements.txt](requirements.txt). It is recommended to run everything inside virtual environment.
 
 ## Training
 
-Download the 3 PTB data files from https://github.com/nikitakit/self-attentive-parser/tree/master/data, and put them in the data/ folder.
-The dependency structures are mainly obtained by converting constituent structure with version 3.3.0 of [Stanford Parser](http://nlp.stanford.edu/software/lex-parser.html) in the `data/` folder:
+Training can be started with the following command:
 
 ```
-java -cp stanford-parser_3.3.0.jar edu.stanford.nlp.trees.EnglishGrammaticalStructure -basic -keepPunct -conllx -treeFile 02-21.10way.clean > ptb_train_3.3.0.sd
+./run_single.sh
 ```
 
-For CTB, we use the same datasets and preprocessing from the [Distance Parser](https://github.com/hantek/distance-parser).
-For PTB, we use the same datasets and preprocessing from the [self-attentive-parser](https://github.com/hantek/distance-parser).
-[GloVe](https://nlp.stanford.edu/projects/glove) embeddings are optional. 
-
-### Training Instructions
-
-Some of the available arguments are:
-
-Argument | Description | Default
---- | --- | ---
-`--model-path-base` | Path base to use for saving models | N/A
-`--evalb-dir` |  Path to EVALB directory | `EVALB/`
-` --train-ptb-path` | Path to training constituent parsing | `data/02-21.10way.clean`
-`--dev-ptb-path` | Path to development constituent parsing | `data/22.auto.clean`
-`--dep-train-ptb-path` | Path to training dependency parsing | `data/ptb_train_3.3.0.sd`
-`--dep-dev-ptb-path` | Path to development dependency parsing | `data/ptb_dev_3.3.0.sd`
-`--batch-size` | Number of examples per training update | 250
-`--checks-per-epoch` | Number of development evaluations per epoch | 4
-`--subbatch-max-tokens` | Maximum number of words to process in parallel while training (a full batch may not fit in GPU memory) | 2000
-`--eval-batch-size` | Number of examples to process in parallel when evaluating on the development set | 30
-`--numpy-seed` | NumPy random seed | Random
-`--use-words` | Use learned word embeddings | Do not use word embeddings
-`--use-tags` | Use predicted part-of-speech tags as input | Do not use predicted tags
-`--use-chars-lstm` | Use learned CharLSTM word representations | Do not use CharLSTM
-`--use-elmo` | Use pre-trained ELMo word representations | Do not use ELMo
-`--use-bert` | Use pre-trained BERT word representations | Do not use BERT
-`--use-xlnet` | Use pre-trained XLNet word representations | Do not use XLNet
-`--pad-left` | When using pre-trained XLNet padding on left | Do not pad on left
-`--bert-model` | Pre-trained BERT model to use if `--use-bert` is passed | `bert-large-uncased`
-`--no-bert-do-lower-case` | Instructs the BERT tokenizer to retain case information (setting should match the BERT model in use) | Perform lowercasing
-`--xlnet-model` | Pre-trained XLNet model to use if `--use-xlnet` is passed | `xlnet-large-cased`
-`--no-xlnet-do-lower-case` | Instructs the XLNet tokenizer to retain case information (setting should match the XLNet model in use) | Perform uppercasing
-`--const-lada` | Lambda weight | 0.5
-`--model-name` | Name of model | test
-`--embedding-path` | Path to pre-trained embedding | N/A
-`--embedding-type` | Pre-trained embedding type | glove
-`--dataset`     | Dataset type | ptb
-
-
-Additional arguments are available for other hyperparameters; see `make_hparams()` in `src/main.py`. These can be specified on the command line, such as `--num-layers 2` (for numerical parameters), `--use-tags` (for boolean parameters that default to False), or `--no-partitioned` (for boolean parameters that default to True).
-
-For each development evaluation, the best_dev_score is the sum of F-score and LAS on the development set and compared to the previous best. If the current model is better, the previous model will be deleted and the current model will be saved. The new filename will be derived from the provided model path base and the development best_dev_score.
-
-As an example, after setting the paths for data and embeddings,
-to train a Joint-Span parser, simply run:
-```
-sh run_single.sh
-```
-to train a Joint-Span parser with BERT, simply run:
-```
-sh run_bert.sh
-```
-to train a Joint-Span parser with XLNet, simply run:
-```
-sh run_xlnet.sh
-```
-### Evaluation Instructions
-
-A saved model can be evaluated on a test corpus using the command `python src/main.py test ...` with the following arguments:
-
-Argument | Description | Default
---- | --- | ---
-`--model-path-base` | Path base of saved model | N/A
-`--evalb-dir` |  Path to EVALB directory | `EVALB/`
-`--test-ptb-path` | Path to test constituent parsing | `data/23.auto.clean`
-`--dep-test-ptb-path` | Path to test dependency parsing | `data/ptb_test_3.3.0.sd`
-`--embedding-path` | Path to pre-trained embedding | `data/glove.6B.100d.txt.gz`
-`--eval-batch-size` | Number of examples to process in parallel when evaluating on the test set | 100
-`--dataset`     | Dataset type | ptb
-
-As an example, after extracting the pre-trained model, you can evaluate it on the test set using the following command:
+Then you will see something like this:
 
 ```
-sh test.sh
-```
-If you want to parse the sentences, after setting the input file and pre-trained model, run following command:
-```
-sh parse.sh
-```
-## Citation
-If you use this software for research, please cite our paper as follows:
-```
-@inproceedings{zhou-zhao-2019-head,
-    title = "Head-Driven Phrase Structure Grammar Parsing on {P}enn Treebank",
-    author = "Zhou, Junru  and Zhao, Hai",
-    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics",
-    month = jul,
-    year = "2019",
-    address = "Florence, Italy",
-    publisher = "Association for Computational Linguistics",
-}
+Not using CUDA!
+Manual seed for pytorch: 56721812
+Hyperparameters:
+attention_dropout 0.2
+bert_do_lower_case True
+bert_model 'bert-large-uncased'
+bert_transliterate ''
+char_lstm_input_dropout 0.2
+clip_grad_norm 0.0
+const_lada 0.5
+d_biaffine 1024
+d_char_emb 64
+d_ff 2048
+d_kv 64
+d_label_hidden 250
+d_model 1024
+dataset 'ptb'
+elmo_dropout 0.5
+embedding_dropout 0.2
+embedding_path 'data/glove.gz'
+embedding_type 'glove'
+learning_rate 0.0008
+learning_rate_warmup_steps 160
+max_len_dev 0
+max_len_train 0
+model_name 'joint_single'
+morpho_emb_dropout 0.2
+num_heads 8
+num_layers 12
+pad_left False
+partitioned True
+punctuation ".``'':,"
+relu_dropout 0.2
+residual_dropout 0.2
+sentence_max_len 300
+step_decay True
+step_decay_factor 0.5
+step_decay_patience 5
+tag_emb_dropout 0.2
+timing_dropout 0.0
+use_bert False
+use_bert_only False
+use_cat True
+use_chars_lstm True
+use_elmo False
+use_tags True
+use_words True
+use_xlnet False
+word_emb_dropout 0.4
+xlnet_do_lower_case False
+xlnet_model 'xlnet-large-cased'
+Reading dependency parsing data from data/train_dep.txt
+Reading dependency parsing data from data/dev_dep.txt
+reading data: 10000
+reading data: 20000
+reading data: 30000
+Total number of data: 39832
+Loading training trees from data/train_con.txt...
+Loaded 39,832 training examples.
+Loading development trees from data/dev_con.txt...
+Loaded 1,700 development examples.
+Processing trees for training...
+total wrong head of : train data: is 46
+total wrong head of : dev data: is 3
+Constructing vocabularies...
+Initializing model...
+loading embedding: glove from data/glove.gz
+oov: 18819
+Initializing optimizer...
+Training...
+This is joint_single
+epoch 1 batch 1/160 processed 250 batch-loss 376.0451 grad-norm 515.9416 epoch-elapsed 0h01m21s total-elapsed 0h01m21s
 ```
 
-## Credits
+You can specify a lot of parameters. Full list can be found in authors' Github.
 
-The code in this repository and portions of this README are based on https://github.com/nikitakit/self-attentive-parser
+## Evaluation
+
+In order to evaluate the perfomance of the model you need to have some model and GloVe embeddings.
+Trained with default parameters model can be downloaded from [here](https://github.com/svinkapeppa/comp_models_nl/releases/download/v0.0.2/model.pt). Glove embeddings cand be downloaded fron [here](https://github.com/svinkapeppa/comp_models_nl/releases/download/v0.0.2/glove.gz).
+
+Place trained model in `models` folder. Place embeddings in `data` folder.
+
+Evaluation can be started with the following command (snippet without warnings, which actually occur but doesn't affect anything):
+
+```
+./test.sh
+```
+
+Then you will see something like this (snippet without warnings, which actually occur but doesn't affect anything):
+
+```
+Not using CUDA!
+Loading model from models/model.pt...
+loading embedding: glove from data/glove.gz
+oov: 18820
+Reading dependency parsing data from data/test_dep.txt
+Loading test trees from data/test_con.txt...
+Loaded 2,416 test examples.
+Parsing test sentences...
+test-fscore (Recall=93.64, Precision=93.92, FScore=93.78) test-elapsed 0h01m35s
+best test W. Punct: ucorr: 54210, lcorr: 53508, total: 56684, uas: 95.64%, las: 94.40%, ucm: 59.64%, lcm: 50.75%
+best test Wo Punct: ucorr: 47943, lcorr: 47241, total: 49893, uas: 96.09%, las: 94.68%, ucm: 62.04%, lcm: 52.69%
+best test Root: corr: 2366, total: 2416, acc: 97.93%
+============================================================================================================================
+```
