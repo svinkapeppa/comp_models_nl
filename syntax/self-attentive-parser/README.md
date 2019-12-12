@@ -9,6 +9,7 @@ Working variant of self-attentive parser, developed by Nikita Kitaev and Dan Kle
 1. Linux
   - Because of Cython it is nearly impossible to run this code on MacOS
 2. Python 3.6 ot higher
+3. Before starting, run make inside the EVALB/ directory to compile an evalb executable. This will be called from Python for evaluation. If training on the SPMRL datasets, you will need to run make inside the EVALB_SPMRL/ directory instead.
 
 Python dependencies can be found in [requirements.txt](requirements.txt). It is recommended to run everything inside virtual environment.
 
