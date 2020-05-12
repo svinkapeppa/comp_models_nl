@@ -15,3 +15,15 @@ Descriptions of tasks can be found inside `.ipynb` notebooks or in nested `READM
 ## [Syntax](syntax)
 
 Second part of the course is about syntax.
+
+## [Topic Modeling](topic-modeling)
+
+Third part of the course is about topic modeling.
+
+## [Summarization](summarization)
+
+Fourth part of the course is about summarization.
+
+## [QA](qa)
+
+Fifth part of the course is about QA.
